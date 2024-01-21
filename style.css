@@ -75,6 +75,12 @@ body.with-overlay {
     width: 173px;
     height: 173px;
     cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+img .avatar {
+    width: 100%;
 }
 
 .header__info span {
@@ -120,6 +126,15 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+#edit-bio div {
+    border-radius: 100px;
+    padding: 14px 20px;
+    border: 2px solid var(--primary);
+    background-color: var(--primary);
+    color: var(--white);
+    cursor: pointer;
 }
 
 #edit-bio:hover {
@@ -191,6 +206,10 @@ button:hover {
 
 .photos__empty-content {
     margin-top: 20px;
+}
+
+.photos__button button {
+    margin: 10px 40% 0;
 }
 
 .empty-content {
@@ -500,9 +519,10 @@ input {
 }
 
 .comments__item {
+    overflow: auto;
     display: flex;
     align-items: flex-start;
-    justify-content: center;
+    justify-content: start;
     gap: 12px;
     margin-bottom: 12px;
 }

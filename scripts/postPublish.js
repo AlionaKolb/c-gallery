@@ -1,13 +1,18 @@
-import { closeAndClearEntry } from "./modalEntry.js";
-import { countPosts } from "./countPosts.js";
+import { closeAndClearEntry, showModal, addContent } from "./modalEntry.js";
+import { countPosts, photoCount } from "./countPosts.js";
 import { showSuccessMessage, showFailMessage } from "./showMessage.js";
-import { photosInfo, emptyContent, headerControls } from "./main.js";
+import { makePostByTemplate } from "./useTemplate.js"
+import { formatDate } from "./formatDate.js";
 
 export const fileInput = document.querySelector("#file-upload");
 export const previewPostModal = document.querySelector(".preview-post-modal");
 export const textCounter = document.querySelector(".text-counter");
 export const postText = document.querySelector("#post-text");
 export const postHashtags = document.querySelector("#post-hashtags");
+export const photosContent = document.querySelector(".photos__content");
+const btn = document.querySelector(".photos__button button");
+const like = document.querySelector(".statistics__likes");
+const commentsBtn = document.querySelector(".comments-button");
 
 fileInput.setAttribute('accept', 'image/*');
 fileInput.setAttribute('name', 'file');
@@ -42,16 +47,14 @@ export function postRequest() {
             if (result.ok) {
                 showSuccessMessage();
                 countPosts();
-                photosInfo.classList.remove("hidden");
-                emptyContent.classList.add("hidden");
-                headerControls.classList.remove("hidden");
+                addContent();
                 return result.json();
             } else {
                 showFailMessage();
             };
         })
         .then(() => {
-            //getResponse();
+            getResponse();
         })
         .catch(() => {
             showFailMessage();
@@ -59,4 +62,90 @@ export function postRequest() {
         .finally(() => {
             closeAndClearEntry();
         })
+}
+
+getResponse();
+
+let posts = [];
+let postsPortion = 9;
+let slicedData = [];
+let numerOfShownItems = 9;
+
+btn.addEventListener('click', () => {
+    numerOfShownItems = Math.min(numerOfShownItems + 9, posts.length)
+    slicedData = posts.slice(0, numerOfShownItems);
+    console.log('got here', slicedData);
+    const fragment = new DocumentFragment();
+    photosContent.innerHTML = '';
+    for (let item of slicedData) {
+        fragment.append(makePostByTemplate(item.image, item.id));
+    };
+    photosContent.append(fragment);
+    if (posts.length === numerOfShownItems) {
+        btn.classList.add('hidden');
+    }
+});
+
+export function getResponse() {
+    fetch(urlGet, {
+            method: 'GET',
+            headers: {
+                Authorization: myToken,
+            }
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            photosContent.innerHTML = '';
+            posts = data;
+
+            photoCount.innerHTML = data.length;
+            addContent();
+
+            const postsLength = data.length;
+            const slicedData = data.slice(0, postsPortion);
+
+            if (postsLength > postsPortion) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden')
+            }
+
+            const fragment = new DocumentFragment();
+            for (let item of slicedData) {
+                fragment.append(makePostByTemplate(item.image, item.id, item.likes, item.comments.length));
+            };
+            photosContent.append(fragment);
+        })
+        .then(() => {
+            window.addEventListener('click', openPreview);
+        })
+}
+
+let currentId;
+let currentPostInfo;
+
+function openPreview(event) {
+
+    if (event.target.closest(".post")) {
+
+        const postElement = event.target.closest(".post");
+        currentId = +postElement.id;
+        currentPostInfo = posts.find((item) => item.id === currentId);
+
+        let date = currentPostInfo.created_at;
+        const dateOfCreation = formatDate(new Date(date));
+        console.log(currentPostInfo.id);
+        previewPostModal.classList.add("active");
+        showModal();
+        document.querySelector("#post-photo").src = currentPostInfo.image;
+        document.querySelector(".post-text").innerHTML = currentPostInfo.text;
+        document.querySelector(".post-hashtags a").innerHTML = currentPostInfo.tags.join(' ');
+        document.querySelector(".account-info__time").innerHTML = dateOfCreation;
+        document.querySelector(".statistics__likes span").innerHTML = currentPostInfo.likes;
+        document.querySelector(".statistics__comments span").innerHTML = currentPostInfo.comments.length;
+
+    }
+
 }
