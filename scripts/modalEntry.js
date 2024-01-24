@@ -1,11 +1,11 @@
+"use strict";
 import { body, bodyOverlay } from "./main.js";
-import { firstModal, secondModal, modalFooter, updatePreview, modalEntry } from "./updatePreview.js";
-import { postText, postHashtags, fileInput, previewPostModal } from "./postPublish.js";
+import { fileInput, firstModal, secondModal, modalFooter, updatePreview, postText, postHashtags, modalEntry } from "./updatePreview.js";
+import { previewPostModal } from "./postPublish.js";
 
 
 export function showModal() {
     fileInput.addEventListener("change", updatePreview);
-    console.log(fileInput);
     modalEntry.classList.add("active");
     firstModal.classList.remove("hidden");
     secondModal.classList.add("hidden");

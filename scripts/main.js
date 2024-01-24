@@ -1,7 +1,8 @@
+"use strict";
 import { showModal, closeAndClearEntry } from "./modalEntry.js";
-import { sendPost, postText, postHashtags } from "./postPublish.js";
+import { sendPost, postText, postHashtags } from "./updatePreview.js";
+import { photoCount } from "./postPublish.js";
 import { countLetters, hashtagsField } from "./validationTextarea.js";
-import { photoCount } from "./countPosts.js";
 
 
 export const bodyOverlay = document.querySelector(".body-overlay");

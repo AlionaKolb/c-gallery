@@ -1,47 +1,71 @@
+"use strict";
 import { closeAndClearEntry } from "./modalEntry.js";
-import { countPosts } from "./countPosts.js";
 import { showSuccessMessage, showFailMessage } from "./showMessage.js";
 import { photosInfo, emptyContent, headerControls } from "./main.js";
+import { formdata } from "./updatePreview.js";
 
-export const fileInput = document.querySelector("#file-upload");
 export const previewPostModal = document.querySelector(".preview-post-modal");
 export const textCounter = document.querySelector(".text-counter");
-export const postText = document.querySelector("#post-text");
-export const postHashtags = document.querySelector("#post-hashtags");
-
-fileInput.setAttribute('accept', 'image/*');
-fileInput.setAttribute('name', 'file');
 
 
-const urlPost = "https://c-gallery.polinashneider.space/api/v1/posts/";
-const urlGet = "https://c-gallery.polinashneider.space/api/v1/users/me/posts/";
-const myToken = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA3MzM0MTI4LCJpYXQiOjE3MDI0OTU3MjgsImp0aSI6IjZkOWEwODNhOTk4NDQwY2Q5YzQ2ODE5N2IwODkzNWRjIiwidXNlcl9pZCI6NDN9.cf9FEPwqqPztSDdMD3RFYUtBLzpfI3jRg2zkInQWCcI";
+export const photoCount = document.querySelector("#photo-count");
 
-let formdata = new FormData();
+const URLPOST = "https://c-gallery.polinashneider.space/api/v1/posts/";
+const URLGET = "https://c-gallery.polinashneider.space/api/v1/users/me/posts/";
+const MYTOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA3MzM0MTI4LCJpYXQiOjE3MDI0OTU3MjgsImp0aSI6IjZkOWEwODNhOTk4NDQwY2Q5YzQ2ODE5N2IwODkzNWRjIiwidXNlcl9pZCI6NDN9.cf9FEPwqqPztSDdMD3RFYUtBLzpfI3jRg2zkInQWCcI";
+
+/*let files;
+
+export function handleDrop(e) {
+    const dt = e.dataTransfer;
+    files = dt.files;
+    updatePreview();
+}
+
+let file;
+
+export function updatePreview() {
+    if (fileInput.files[0]) {
+        file = fileInput.files[0];
+    } else {
+        file = files[0];
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.addEventListener("load", function() {
+        firstModal.classList.add("hidden");
+        uploadedPhoto.src = reader.result;
+        secondModal.classList.remove("hidden");
+        modalFooter.classList.remove("hidden");
+    })
+}
+
+const formdata = new FormData();
 
 export function sendPost(event) {
-    event.preventDefault(); // кроме drag and drop
-    formdata.append("image", fileInput.files[0]); // изменить для drag and drop
+    event.preventDefault();
+    formdata.append("image", file);
     formdata.append("tags", postHashtags.value);
     formdata.append("text", postText.value);
 
     postRequest();
-}
+}*/
 
 export function postRequest() {
 
-    fetch(urlPost, {
+    fetch(URLPOST, {
 
             method: 'POST',
             headers: {
-                Authorization: myToken,
+                Authorization: MYTOKEN,
             },
             body: formdata
         })
         .then((result) => {
             if (result.ok) {
                 showSuccessMessage();
-                countPosts();
+                photoCount.textContent = ++photoCount.textContent;
                 photosInfo.classList.remove("hidden");
                 emptyContent.classList.add("hidden");
                 headerControls.classList.remove("hidden");
@@ -50,9 +74,7 @@ export function postRequest() {
                 showFailMessage();
             };
         })
-        .then(() => {
-            //getResponse();
-        })
+        .then(() => {})
         .catch(() => {
             showFailMessage();
         })

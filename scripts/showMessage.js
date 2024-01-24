@@ -1,3 +1,4 @@
+"use strict";
 import { body } from "./main.js";
 
 let clon;
