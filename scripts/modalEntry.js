@@ -8,6 +8,7 @@ const photosInfo = document.querySelector(".photos__info");
 const headerControls = document.querySelector(".header__controls");
 
 export function showModal(event) {
+
     modalEntry.classList.add("active");
     fileInput.addEventListener("change", updatePreview);
     firstModal.classList.remove("hidden");
