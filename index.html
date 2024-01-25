@@ -17,7 +17,10 @@
     <div class="container">
         <header class="header">
             <div class="header__content">
-                <img class="avatar" id="profile-avatar" src="./assets/avatar.svg" alt="codegirl_school" />
+                <label for="avatar-upload" class="avatar">
+                <img class="avatar" id="profile-avatar" src="./assets/avatar.svg" alt="my_avatar" /></label>
+                <input id="avatar-upload" type="file" name="file" accept="image/*">
+
                 <div class="header__info">
                     <h2 id="account-nickname">Aliona_Kolb</h2>
                     <h2 id="account-name" class="hidden">Алена</h2>
@@ -28,8 +31,7 @@
                 </div>
                 <div class="header__controls">
                     <button type="button" id="add-photo">Добавить публикацию</button>
-                    <button type="button" id="edit-bio"><i class="fa fa-pencil"></i>
-            </button>
+                    <button type="button" id="edit-bio"><i class="fa fa-pencil"></i></button>
                 </div>
             </div>
         </header>
@@ -38,7 +40,7 @@
                 <span class="photos__info-title">Фото</span>
                 <span><span id="photo-count">0</span> публикаций</span>
             </div>
-            <div class="empty-content photos__empty-content hidden">
+            <div class="empty-content photos__empty-content">
                 <img class="empty-content__placeholder" src="./assets/photos.svg" />
                 <h2 class="empty-content__title">У вас пока нет публикаций</h2>
                 <p class="empty-content__text">Создайте свою первую публикацию</p>
@@ -46,6 +48,10 @@
             Создать публикацию
           </button>
             </div>
+            <div class="photos__content">
+            </div>
+            <div class="photos__button">
+                <button type="button" class="photos__button hidden">Показать еще</button></div>
         </main>
         <footer class="footer">© 2022 codegirl_school</footer>
         <!-- Add post modal start -->
@@ -152,24 +158,23 @@
               <span>0</span>
                     </span>
                 </div>
-                <p class="post-text">
-                    Неожиданный вопрос, правда? Кажется, что HTML и CSS — инструмент разработчиков и верстальщиков. Но на самом деле есть и другие профессии, которым приходится иметь дело с кодом 👌.
-                </p>
+                <p class="post-text"> </p>
                 <p class="post-hashtags">
-                    <a href="#">#itaкурсы</a>
-                    <a href="#">#сменитьпрофессию</a> <a href="#">#новаяпрофессия</a>
-                    <a href="#">#itпрофессии</a> <a href="#">#itпрофессии</a>
+                    <a href="#"></a>
+                    <a href="#"></a>
+                    <a href="#"></a>
+                    <a href="#"></a>
+                    <a href="#"></a>
                 </p>
                 <div class="comments">
                     <div class="comments__content">
                         <div class="comments__item">
-                            <img class="comments__item-avatar" src="./assets/sample-avatar.jpg" width="40" alt="" />
+                            <img class="comments__item-avatar" src="" width="" alt="" />
                             <div class="comments__item-text">
-                                <h3 class="comments__item-nickname">anastas_kvl</h3>
+                                <h3 class="comments__item-nickname"></h3>
                                 <p class="comments__item-comment">
-                                    Думаю, что еще SEO-специалисты пользуются этими языками, интересный пост!👌
                                 </p>
-                                <span class="comments__item-time">15 октября в 21:40</span>
+                                <span class="comments__item-time"></span>
                             </div>
                         </div>
                     </div>
@@ -231,6 +236,21 @@
       </div>
     </template>
     <!-- Grid post template end -->
+
+    <!-- Grid comments template start -->
+    <template id="comments-template">
+    <div class="comments__item">
+        <img class="comments__item comments__item-avatar" src="" />
+        <div class="comments__item-text">
+            <h3 class="comments__item-nickname"></h3>
+            <p class="comments__item-comment"></p>
+            <h3 class="comments__item-time"></h3>
+        </div>
+    </div>
+    </template>
+    <!-- Grid comments template end-->
+
+
     <script type="module" src="scripts/main.js"></script>
 </body>
 

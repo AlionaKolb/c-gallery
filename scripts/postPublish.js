@@ -1,56 +1,29 @@
 "use strict";
-import { closeAndClearEntry } from "./modalEntry.js";
+import { closeAndClearEntry, showModal, addContent, addOverlay } from "./modalEntry.js";
 import { showSuccessMessage, showFailMessage } from "./showMessage.js";
-import { photosInfo, emptyContent, headerControls } from "./main.js";
-import { formdata } from "./updatePreview.js";
+import { makePostByTemplate } from "./useTemplate.js"
+import { formatDate } from "./formatDate.js";
+import { formdata, postText } from "./updatePreview.js";
 
 export const previewPostModal = document.querySelector(".preview-post-modal");
 export const textCounter = document.querySelector(".text-counter");
-
-
 export const photoCount = document.querySelector("#photo-count");
+export const photosContent = document.querySelector(".photos__content");
+const postPhoto = document.querySelector("#post-photo");
+const shareHashtads = document.querySelector(".post-hashtags a");
+const infoTime = document.querySelector(".account-info__time");
+const statisticsLikes = document.querySelector(".statistics__likes span");
+const statisticsComments = document.querySelector(".statistics__comments span");
+
+const btn = document.querySelector(".photos__button button");
+const like = document.querySelector(".statistics__likes");
+const commentsBtn = document.querySelector(".comments-button");
+const delPost = document.querySelector("#delete-post");
+const postComment = document.querySelector("#post-comment");
 
 const URLPOST = "https://c-gallery.polinashneider.space/api/v1/posts/";
 const URLGET = "https://c-gallery.polinashneider.space/api/v1/users/me/posts/";
 const MYTOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA3MzM0MTI4LCJpYXQiOjE3MDI0OTU3MjgsImp0aSI6IjZkOWEwODNhOTk4NDQwY2Q5YzQ2ODE5N2IwODkzNWRjIiwidXNlcl9pZCI6NDN9.cf9FEPwqqPztSDdMD3RFYUtBLzpfI3jRg2zkInQWCcI";
-
-/*let files;
-
-export function handleDrop(e) {
-    const dt = e.dataTransfer;
-    files = dt.files;
-    updatePreview();
-}
-
-let file;
-
-export function updatePreview() {
-    if (fileInput.files[0]) {
-        file = fileInput.files[0];
-    } else {
-        file = files[0];
-    }
-
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.addEventListener("load", function() {
-        firstModal.classList.add("hidden");
-        uploadedPhoto.src = reader.result;
-        secondModal.classList.remove("hidden");
-        modalFooter.classList.remove("hidden");
-    })
-}
-
-const formdata = new FormData();
-
-export function sendPost(event) {
-    event.preventDefault();
-    formdata.append("image", file);
-    formdata.append("tags", postHashtags.value);
-    formdata.append("text", postText.value);
-
-    postRequest();
-}*/
 
 export function postRequest() {
 
@@ -66,19 +39,106 @@ export function postRequest() {
             if (result.ok) {
                 showSuccessMessage();
                 photoCount.textContent = ++photoCount.textContent;
-                photosInfo.classList.remove("hidden");
-                emptyContent.classList.add("hidden");
-                headerControls.classList.remove("hidden");
+                addContent();
                 return result.json();
             } else {
                 showFailMessage();
             };
         })
-        .then(() => {})
+        .then(() => {
+            getResponse();
+        })
         .catch(() => {
             showFailMessage();
         })
         .finally(() => {
             closeAndClearEntry();
         })
+}
+
+getResponse();
+
+let posts = [];
+const POSTSPORTION = 9;
+let slicedData = [];
+let numerOfShownItems = 9;
+
+btn.addEventListener('click', () => {
+    numerOfShownItems = Math.min(numerOfShownItems + 9, posts.length)
+    slicedData = posts.slice(0, numerOfShownItems);
+    console.log('got here', slicedData);
+    const fragment = new DocumentFragment();
+    photosContent.textContent = '';
+    for (let item of slicedData) {
+        fragment.append(makePostByTemplate(item.image, item.id));
+    };
+    photosContent.append(fragment);
+    if (posts.length === numerOfShownItems) {
+        btn.classList.add('hidden');
+    }
+});
+
+export function getResponse() {
+    fetch(URLGET, {
+            method: 'GET',
+            headers: {
+                Authorization: MYTOKEN,
+            }
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            photosContent.textContent = '';
+            posts = data;
+
+            photoCount.textContent = data.length;
+            addContent();
+
+            const postsLength = data.length;
+            const slicedData = data.slice(0, POSTSPORTION);
+
+            if (postsLength > POSTSPORTION) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden')
+            }
+
+            const fragment = new DocumentFragment();
+            for (let item of slicedData) {
+                fragment.append(makePostByTemplate(item.image, item.id, item.likes, item.comments.length));
+            };
+            photosContent.append(fragment);
+        })
+        .then(() => {
+            window.addEventListener('click', openPreview);
+        })
+}
+
+
+
+let currentId;
+let currentPostInfo;
+
+function openPreview(event) {
+
+    if (event.target.closest(".post")) {
+
+        const postElement = event.target.closest(".post");
+        currentId = +postElement.id;
+        currentPostInfo = posts.find((item) => item.id === currentId);
+
+        const date = currentPostInfo.created_at;
+        const dateOfCreation = formatDate(new Date(date));
+        previewPostModal.classList.add("active");
+        addOverlay();
+        postPhoto.src = currentPostInfo.image;
+        postText.textContent = currentPostInfo.text;
+        shareHashtads.textContent = currentPostInfo.tags.join(' ');
+        infoTime.textContent = dateOfCreation;
+        statisticsLikes.textContent = currentPostInfo.likes;
+        statisticsComments.textContent = currentPostInfo.comments.length;
+
+    }
+
 }
