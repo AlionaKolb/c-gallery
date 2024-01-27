@@ -71,5 +71,6 @@ export function sendPost(event) {
     formdata.append("image", file);
     formdata.append("tags", postHashtags.value);
     formdata.append("text", postText.value);
+
     postRequest();
 }

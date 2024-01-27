@@ -17,6 +17,7 @@ export function formatDate(date) {
     if (newYear < 10) {
         newYear = '0' + newYear
     };
+  
     return `${newDate} ${newMonts} ${newYear}`;
 }
 

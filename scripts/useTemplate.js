@@ -1,5 +1,6 @@
 "use strict";
 const postTemplate = document.querySelector("#post-template");
+
 export function makePostByTemplate(image, id, likes, comments) {
     const item = postTemplate.content.cloneNode(true);
     item.querySelector(".post").id = id;
@@ -11,6 +12,7 @@ export function makePostByTemplate(image, id, likes, comments) {
 }
 
 const commentsTemplate = document.querySelector("#comments-template");
+
 export function makeCommentsByTemplate(img, h3, text, time) {
     const item = commentsTemplate.content.cloneNode(true);
     item.querySelector(".comments__item-nickname").textContent = h3;

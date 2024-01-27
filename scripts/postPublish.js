@@ -4,6 +4,7 @@ import { showSuccessMessage, showFailMessage } from "./showMessage.js";
 import { makePostByTemplate, makeCommentsByTemplate } from "./useTemplate.js"
 import { formatDate, formatTime } from "./formatDate.js";
 import { formdata, postText } from "./updatePreview.js";
+
 export const previewPostModal = document.querySelector(".preview-post-modal");
 export const textCounter = document.querySelector(".text-counter");
 export const photoCount = document.querySelector("#photo-count");
@@ -100,6 +101,7 @@ export function getResponse() {
 
             const postsLength = data.length;
             const slicedData = data.slice(0, POSTSPORTION);
+
             if (postsLength > POSTSPORTION) {
                 btn.classList.remove('hidden');
             } else {
