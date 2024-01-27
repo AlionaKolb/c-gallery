@@ -1,18 +1,20 @@
-import { textCounter, postText, postHashtags } from "./postPublish.js";
+"use strict";
+import { postText, postHashtags } from "./updatePreview.js";
+import { textCounter } from "./postPublish.js";
 import { postPublish } from "./main.js";
 
-const maxNum = 2000;
-const minNum = 0;
+const MAXNUM = 2000;
+const MINNUM = 0;
 
 export function countLetters() {
     const length = postText.value.length
-    textCounter.innerHTML = `${minNum + length}/${maxNum}`
+    textCounter.textContent = `${MINNUM + length}/${MAXNUM}`
 
-    if (length > maxNum) {
+    if (length > MAXNUM) {
         postText.style = 'border: 1px solid var(--error)';
         postPublish.style = 'background-color: var(--disabled)';
         postPublish.disabled = true;
-    } else if (length <= maxNum) {
+    } else if (length <= MAXNUM) {
         postText.style = 'border: 1px solid var(--light-border)';
         postPublish.style = 'background-color: var(--primary)';
         postPublish.disabled = false;
