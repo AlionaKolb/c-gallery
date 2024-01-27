@@ -5,7 +5,6 @@ let clon;
 export function showSuccessMessage() {
     const successMessage = document.querySelector("#alert-success");
     clon = successMessage.content.firstElementChild.cloneNode(true);
-
     body.appendChild(clon);
 
     setTimeout(() => {
